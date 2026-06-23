@@ -1,0 +1,245 @@
+{
+  "URLBlocklist": ["*"],
+  "URLAllowlist": [
+
+    "localhost",
+    "127.0.0.1",
+    "codi.link",
+    "*.codi.link",
+
+    "brave.com",
+    "*brave.com",
+    "google.com",
+    "*.google.com",
+    "gstatic.com",
+    "*.gstatic.com",
+    "googleapis.com",
+    "*.googleapis.com",
+    "googleusercontent.com",
+    "*.googleusercontent.com",
+
+    "capcut.com",
+    "*.capcut.com",
+
+    "gmail.com",
+    "*.gmail.com",
+
+    "drive.google.com",
+    "docs.google.com",
+    "sheets.google.com",
+    "slides.google.com",
+    "classroom.google.com",
+    "meet.google.com",
+    "calendar.google.com",
+
+    "chatgpt.com",
+    "*.chatgpt.com",
+
+    "microsoft.com",
+    "*.microsoft.com",
+
+    "substrate.office.com",
+    "*.substrate.office.com",
+    "word-edit.officeapps.live.com",
+    "word-view.officeapps.live.com",
+    "uci.officeapps.live.com",
+    "*.onenote.com",
+    "ocsp.digicert.com",
+    "*.digicert.com",
+    "*.verisign.com",
+    "wus2.www.office.com",
+    "*.www.office.com",
+    "word.cloud.microsoft",
+    "*.word.cloud.microsoft",
+    "cloud.microsoft",
+    "*.cloud.microsoft",
+    "substrate.office.com",
+    "*.substrate.office.com",
+    "*.protection.outlook.com",
+    "*.outlook.com",
+    "outlook.com",
+    "*.msecnd.net",
+    "msecnd.net",
+    "*.msftidentity.com",
+    "*.msidentity.com",
+    "*.bing.com",
+    "bing.com",
+    "*.azure.com",
+    "azure.com",
+    "*.azureedge.net",
+    "azureedge.net",
+
+    "office.com",
+    "*.office.com",
+
+    "live.com",
+    "*.live.com",
+
+    "microsoftonline.com",
+    "*.microsoftonline.com",
+
+    "office.net",
+    "*.office.net",
+
+    "officeapps.live.com",
+    "*.officeapps.live.com",
+
+    "login.microsoft.com",
+    "*.login.microsoft.com",
+    "login.windows.net",
+    "*.login.windows.net",
+    "account.microsoft.com",
+    "*.account.microsoft.com",
+    "login.live.com",
+    "*.login.live.com",
+
+    "cdn.office.net",
+    "*.cdn.office.net",
+    "res.cdn.office.net",
+    "*.res.cdn.office.net",
+    "officecdnmac.microsoft.com",
+    "r1.res.office365.com",
+    "*.res.office365.com",
+
+    "office365.com",
+    "*.office365.com",
+    "online.office.com",
+    "*.online.office.com",
+
+    "browser.pipe.aria.microsoft.com",
+    "*.aria.microsoft.com",
+
+    "sharepoint.com",
+    "*.sharepoint.com",
+
+    "canva.com",
+    "*.canva.com",
+    "canvausercontent.com",
+    "*.canvausercontent.com",
+
+    "photopea.com",
+
+    "remove.bg",
+
+    "pixlr.com",
+    "*.pixlr.com",
+
+    "tinypng.com",
+
+    "ilovepdf.com",
+    "*.ilovepdf.com",
+
+    "smallpdf.com",
+    "*.smallpdf.com",
+
+    "pdf24.org",
+    "*.pdf24.org",
+
+    "github.com",
+    "*.github.com",
+    "githubusercontent.com",
+    "*.githubusercontent.com",
+    "raw.githubusercontent.com",
+
+    "stackoverflow.com",
+    "*.stackoverflow.com",
+
+    "developer.mozilla.org",
+
+    "w3schools.com",
+    "*.w3schools.com",
+
+    "scratch.mit.edu",
+
+    "code.org",
+    "*.code.org",
+
+    "khanacademy.org",
+    "*.khanacademy.org",
+
+    "geogebra.org",
+    "*.geogebra.org",
+
+    "desmos.com",
+    "*.desmos.com",
+
+    "wolframalpha.com",
+    "*.wolframalpha.com",
+
+    "wikipedia.org",
+    "*.wikipedia.org",
+
+    "britannica.com",
+    "*.britannica.com",
+
+    "nationalgeographic.com",
+    "*.nationalgeographic.com",
+
+    "nasa.gov",
+    "*.nasa.gov",
+
+    "youtube.com",
+    "*.youtube.com",
+    "youtu.be",
+    "*.youtu.be",
+    "ytimg.com",
+    "*.ytimg.com",
+    "googlevideo.com",
+    "*.googlevideo.com",
+
+    "friv.com",
+    "*.friv.com",
+
+    "poki.com",
+    "*.poki.com",
+
+    "snokido.com",
+    "*snokido.com",
+
+    "typing.com",
+    "*.typing.com",
+
+    "monkeytype.com",
+
+    "translate.google.com",
+
+    "deepl.com",
+    "*.deepl.com",
+
+    "office.com",
+    "*.office.com",
+
+    "live.com",
+    "*.live.com",
+
+    "onedrive.com",
+    "*.onedrive.com",
+
+    "freepik.com",
+    "*.freepik.com",
+
+    "flaticon.com",
+    "*.flaticon.com",
+
+    "unsplash.com",
+    "*.unsplash.com",
+
+    "pexels.com",
+    "*.pexels.com",
+
+    "pixabay.com",
+    "*.pixabay.com",
+
+    "archive.org",
+    "*.archive.org",
+
+    "gutenberg.org",
+    "*.gutenberg.org",
+
+    "cambridge.org",
+    "*.cambridge.org",
+
+    "dictionary.com",
+    "*.dictionary.com"
+  ]
+}

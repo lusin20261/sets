@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+SRC="/usr/share/applications"
+DST="$HOME/.local/share/applications"
+LIST="$HOME/.config/rofi/blacklist"
+MARKER="# Managed by rofi-blacklist-sync"
+
+mkdir -p "$DST"
+
+# Restaurar aplicaciones quitadas de la blacklist
+# Solo elimina archivos administrados por este script
+for file in "$DST"/*.desktop; do
+    [ -e "$file" ] || continue
+
+    # Ignorar archivos que no fueron creados por este script
+    if ! grep -Fq "$MARKER" "$file"; then
+        continue
+    fi
+
+    app=$(basename "$file")
+
+    if ! grep -Fxq "$app" "$LIST"; then
+        rm "$file"
+    fi
+done
+
+# Ocultar aplicaciones de la blacklist
+while read -r app; do
+    [ -z "$app" ] && continue
+    if [ -f "$SRC/$app" ]; then
+        cp "$SRC/$app" "$DST/$app"
+        # Insertar NoDisplay=true justo después de [Desktop Entry]
+        sed -i '/^\[Desktop Entry\]/a NoDisplay=true' "$DST/$app"
+        # Eliminar cualquier otro NoDisplay que pueda existir (excepto el que acabamos de poner)
+        sed -i '0,/^NoDisplay=true/{//!{/^NoDisplay=/d}}' "$DST/$app"
+        # Marcar como administrado
+        if ! grep -Fq "$MARKER" "$DST/$app"; then
+            echo "$MARKER" >> "$DST/$app"
+        fi
+    fi
+done < "$LIST"
+# Actualizar caché de desktop entries
+update-desktop-database "$DST" 2>/dev/null
+rm -f ~/.cache/rofi* 2>/dev/null
