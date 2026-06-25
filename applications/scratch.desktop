@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Scratch
+Comment=Abre Scratch Online
+Exec=brave-browser --app=https://scratch.mit.edu/
+Icon=web-browser
+Terminal=false
+Categories=Network;
