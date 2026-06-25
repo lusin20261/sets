@@ -1,5 +1,7 @@
 -- Apps
 sudo apt purge 'libreoffice*'
+rm -rf ~/.config/libreoffice
+sudo apt purge blueman bluez bluez-tools pulseaudio-module-bluetooth
+sudo apt purge 'bluez*'
 sudo apt autoremove --purge
 sudo apt clean
-rm -rf ~/.config/libreoffice
