@@ -59,6 +59,8 @@
     "*.chatgpt.com",
     "openai.com",
     "*openai.com",
+    "claude.ai",
+    "*claude.ai",
 
     "microsoft.com",
     "*.microsoft.com",
