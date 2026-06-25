@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Paint
+Comment=Abre Paint Online
+Exec=brave-browser --app=https://paintz.app/
+Icon=web-browser
+Terminal=false
+Categories=Network;

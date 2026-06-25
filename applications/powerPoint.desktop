@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Power Point
+Comment=Abre MS Power Point Online
+Exec=brave-browser --app=https://powerpoint.cloud.microsoft/
+Icon=web-browser
+Terminal=false
+Categories=Network;

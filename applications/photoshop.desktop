@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Adobe Photoshop CS6
+GenericName=Editor de imágenes
+Comment=Adobe Photoshop CS6
+Exec=wine "/home/lab/AdobePS/PSCS6.exe"
+Icon=applications-graphics
+Terminal=false
+Categories=Graphics;
+Keywords=photoshop;adobe;imagen;editor;
+StartupNotify=true

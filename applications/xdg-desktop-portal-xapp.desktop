@@ -1,0 +1,8 @@
+[Desktop Entry]
+NoDisplay=true
+Type=Application
+Name=Portal
+Icon=xsi-cog-symbolic
+Exec=/usr/libexec/xdg-desktop-portal-xapp
+NoDisplay=true
+# Managed by rofi-blacklist-sync

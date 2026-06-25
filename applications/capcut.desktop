@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=CapCut
+Comment=Abre CapCut Online
+Exec=brave-browser --app=https://www.capcut.com/my-edit?from_page=landing_page
+Icon=web-browser
+Terminal=false
+Categories=Network;

@@ -1,0 +1,16 @@
+[Desktop Entry]
+NoDisplay=true
+Name=Input Method
+Comment=Set Keyboard Input Method
+Type=Application
+Keywords=keyboard;input
+Exec=im-config
+Terminal=false
+Icon=input-keyboard
+Categories=Settings
+X-AppStream-Ignore=true
+OnlyShowIn=KDE;LXQt;
+X-Ubuntu-Gettext-Domain=im-config
+
+NoDisplay=true
+# Managed by rofi-blacklist-sync

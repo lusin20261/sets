@@ -1,0 +1,12 @@
+[Desktop Entry]
+NoDisplay=true
+Name=Geoclue Demo agent
+GenericName=Demo geoclue agent
+Keywords=geolocation;
+Exec=/usr/libexec/geoclue-2.0/demos/agent
+Icon=mark-location-symbolic
+NotShowIn=GNOME;
+NoDisplay=true
+Terminal=false
+Type=Application
+# Managed by rofi-blacklist-sync

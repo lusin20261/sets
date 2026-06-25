@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Apagar equipo
+Comment=Apagar el equipo
+Exec=/home/lab/.local/bin/apagar.sh
+Icon=system-shutdown
+Terminal=false
+Categories=System;
+Keywords=apagar;shutdown;poweroff;
