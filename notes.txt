@@ -1,1 +1,5 @@
 -- Apps
+sudo apt purge 'libreoffice*'
+sudo apt autoremove --purge
+sudo apt clean
+rm -rf ~/.config/libreoffice

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Codi.Link
+Comment=Abre Codilink Online
+Exec=brave-browser --app=https://codi.link/%
+Icon=web-browser
+Terminal=false
+Categories=Network;
