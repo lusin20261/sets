@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Actualizar Sistema
+Comment=Descarga y aplica la última configuración del laboratorio
+Exec=/home/lab/repositorios/sets/actualizar.sh
+Icon=system-software-update
+Terminal=false
+Categories=System;
