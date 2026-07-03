@@ -17,6 +17,7 @@ echo "-----------------------------------"
 # 1. Ejecutar comandos de notes.txt (primero que todo)
 if [ -f "$REPO_DIR/notes.txt" ]; then
     echo "Ejecutando comandos de notes.txt..."
+    export DEBIAN_FRONTEND=noninteractive
     while IFS= read -r cmd; do
         [ -z "$cmd" ] && continue
         echo "→ $cmd"

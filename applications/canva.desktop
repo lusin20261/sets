@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Canva
+Comment=Abre Canva Online
+Exec=brave-browser --app=https://canva.com/
+Icon=web-browser
+Terminal=false
+Categories=Network;
