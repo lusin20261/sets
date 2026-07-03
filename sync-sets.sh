@@ -59,3 +59,9 @@ echo "-----------------------------------"
 ok "Menú de Rofi regenerado"
 
 echo -e "${GREEN}¡Sincronización completada!${NC}"
+
+# 6. 10-disable-dpms.conf → /etc/X11/xorg.conf.d/10-disable-dpms.conf  (sudo)
+SRC_DPMS="$REPO_DIR/10-disable-dpms.conf"
+DST_DPMS="/etc/X11/xorg.conf.d/10-disable-dpms.conf"
+sudo cp -f "$SRC_DPMS" "$DST_DPMS"
+ok "10-disable-dpms.conf → $DST_DPMS"
