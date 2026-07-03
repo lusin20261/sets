@@ -51,16 +51,22 @@ SRC_WL="$REPO_DIR/whitelist.json"
 DST_WL="/etc/brave/policies/managed/whitelist.json"
 sudo cp -f "$SRC_WL" "$DST_WL"
 ok "whitelist.json → $DST_WL"
-
 echo "-----------------------------------"
 
-# 6. Ejecutar rofi-blacklist-sync ya instalado, para regenerar el menú de Rofi
+# 6. default-search.json → /etc/brave/policies/managed/default-search.json  (sudo)
+SRC_DS="$REPO_DIR/default-search.json"
+DST_DS="/etc/brave/policies/managed/default-search.json"
+sudo cp -f "$SRC_DS" "$DST_DS"
+ok "default-search.json → $DST_DS"
+echo "-----------------------------------"
+
+# 7. Ejecutar rofi-blacklist-sync ya instalado, para regenerar el menú de Rofi
 "$HOME/.local/bin/rofi-blacklist-sync"
 ok "Menú de Rofi regenerado"
 
 echo -e "${GREEN}¡Sincronización completada!${NC}"
 
-# 6. 10-disable-dpms.conf → /etc/X11/xorg.conf.d/10-disable-dpms.conf  (sudo)
+# 8. 10-disable-dpms.conf → /etc/X11/xorg.conf.d/10-disable-dpms.conf  (sudo)
 SRC_DPMS="$REPO_DIR/10-disable-dpms.conf"
 DST_DPMS="/etc/X11/xorg.conf.d/10-disable-dpms.conf"
 sudo cp -f "$SRC_DPMS" "$DST_DPMS"

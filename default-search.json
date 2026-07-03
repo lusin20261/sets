@@ -1,0 +1,6 @@
+{
+  "DefaultSearchProviderEnabled": true,
+  "DefaultSearchProviderName": "Brave",
+  "DefaultSearchProviderSearchURL": "https://search.brave.com/search?q={searchTerms}",
+  "DefaultSearchProviderKeyword": "brave.com"
+}
