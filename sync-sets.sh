@@ -84,7 +84,8 @@ echo "-----------------------------------"
 
 # 6. Recargar tint2
 killall tint2 2>/dev/null || true
-(tint2 &>/dev/null &)
+nohup tint2 &>/dev/null &
+disown
 ok "tint2 recargado"
 echo "-----------------------------------"
 
