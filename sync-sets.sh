@@ -45,6 +45,7 @@ declare -a USER_FILES=(
     "tint2rc|$HOME/.config/tint2/tint2rc"
     "thunarrc|$HOME/.config/Thunar/thunarrc"
     "gtk-bookmarks|$HOME/.config/gtk-3.0/bookmarks"
+    "rc.xml|$HOME/.config/openbox/rc.xml"
 )
 
 echo "Sincronizando configuraciones de usuario..."
@@ -55,6 +56,8 @@ for entry in "${USER_FILES[@]}"; do
     cp -f "$src" "$dst"
     ok "$(basename "$src") → $dst"
 done
+# Permisos ejecutables para scripts desplegados
+chmod +x "$HOME/.local/bin/cerrar-ventana.sh"
 echo "-----------------------------------"
 
 # 3.5 Si es máquina maestra, quitar veyon-master.desktop de la blacklist
@@ -101,3 +104,8 @@ ok "Menú de Rofi regenerado"
 
 echo "-----------------------------------"
 echo -e "${GREEN}¡Sincronización completada!${NC}"
+
+# 8. Recargar Openbox
+openbox --reconfigure
+ok "Openbox recargado"
+echo "-----------------------------------"
