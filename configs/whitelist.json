@@ -144,6 +144,8 @@
 
     "canva.com",
     "*.canva.com",
+    "canva.me",
+    "*canva.me",
     "canvausercontent.com",
     "*.canvausercontent.com",
 
