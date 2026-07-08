@@ -4,3 +4,4 @@ sudo apt purge -y blueman bluez bluez-tools pulseaudio-module-bluetooth
 sudo apt purge -y 'bluez*'
 sudo apt autoremove --purge -y
 sudo apt clean
+xdg-settings set default-web-browser brave-browser.desktop
