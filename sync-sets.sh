@@ -44,6 +44,7 @@ declare -a USER_FILES=(
     "blacklist|$HOME/.config/rofi/blacklist"
     "tint2rc|$HOME/.config/tint2/tint2rc"
     "thunarrc|$HOME/.config/Thunar/thunarrc"
+    "gtk-bookmarks|$HOME/.config/gtk-3.0/bookmarks"
 )
 
 echo "Sincronizando configuraciones de usuario..."
