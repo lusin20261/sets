@@ -41,6 +41,9 @@
     "*.cloudfront.net",
     "cdnjs.cloudflare.com",
 
+    "whatsapp.com",
+    "*whatsapp.com",
+
     "capcut.com",
     "*.capcut.com",
 
@@ -205,25 +208,14 @@
     "nasa.gov",
     "*.nasa.gov",
 
-    "youtube.com",
-    "*.youtube.com",
-    "youtu.be",
-    "*.youtu.be",
-    "ytimg.com",
-    "*.ytimg.com",
     "googlevideo.com",
     "*.googlevideo.com",
-
-    "friv.com",
-    "*.friv.com",
 
     "poki.com",
     "*.poki.com",
 
     "typing.com",
     "*.typing.com",
-
-    "monkeytype.com",
 
     "translate.google.com",
 
