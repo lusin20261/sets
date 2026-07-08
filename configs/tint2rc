@@ -160,6 +160,9 @@ systray_icon_size = 22
 systray_icon_asb = 100 0 0
 systray_monitor = 1
 systray_name_filter = 
+systray_mouse_left = none
+systray_mouse_right = none
+systray_mouse_middle = none
 
 #-------------------------------------
 # Launcher
