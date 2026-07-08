@@ -46,6 +46,7 @@ declare -a USER_FILES=(
     "thunarrc|$HOME/.config/Thunar/thunarrc"
     "gtk-bookmarks|$HOME/.config/gtk-3.0/bookmarks"
     "rc.xml|$HOME/.config/openbox/rc.xml"
+    "cerrar-ventana.sh|$HOME/.local/bin/cerrar-ventana.sh"
 )
 
 echo "Sincronizando configuraciones de usuario..."
@@ -101,11 +102,11 @@ echo "-----------------------------------"
 # 7. Regenerar menú de Rofi
 "$HOME/.local/bin/rofi-blacklist-sync"
 ok "Menú de Rofi regenerado"
-
 echo "-----------------------------------"
-echo -e "${GREEN}¡Sincronización completada!${NC}"
 
 # 8. Recargar Openbox
 openbox --reconfigure
 ok "Openbox recargado"
 echo "-----------------------------------"
+
+echo -e "${GREEN}¡Sincronización completada!${NC}"
