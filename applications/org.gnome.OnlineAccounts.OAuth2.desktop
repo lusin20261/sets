@@ -1,9 +1,0 @@
-[Desktop Entry]
-NoDisplay=true
-Name=GNOME OAuth2 Handler
-Exec=/usr/libexec/goa-oauth2-handler %u
-Type=Application
-MimeType=x-scheme-handler/goa-oauth2;x-scheme-handler/com.googleusercontent.apps.44438659992-7kgjeitenc16ssihbtdjbgguch7ju55s
-NoDisplay=true
-X-Ubuntu-Gettext-Domain=gnome-online-accounts
-# Managed by rofi-blacklist-sync
