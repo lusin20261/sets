@@ -77,3 +77,6 @@ SRC_TINT2="$REPO_DIR/tint2rc"
 DST_TINT2="$HOME/.config/tint2/tint2rc"
 cp -f "$SRC_TINT2" "$DST_TINT2"
 ok "tint2rc → $DST_TINT2"
+killall tint2 2>/dev/null || true
+(tint2 &>/dev/null &)
+ok "tint2 recargado"
