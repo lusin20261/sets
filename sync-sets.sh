@@ -71,3 +71,9 @@ SRC_DPMS="$REPO_DIR/10-disable-dpms.conf"
 DST_DPMS="/etc/X11/xorg.conf.d/10-disable-dpms.conf"
 sudo cp -f "$SRC_DPMS" "$DST_DPMS"
 ok "10-disable-dpms.conf → $DST_DPMS"
+
+# 9. tint2rc → ~/.config/tint2/tint2rc
+SRC_TINT2="$REPO_DIR/tint2rc"
+DST_TINT2="$HOME/.config/tint2/tint2rc"
+cp -f "$SRC_TINT2" "$DST_TINT2"
+ok "tint2rc → $DST_TINT2"
