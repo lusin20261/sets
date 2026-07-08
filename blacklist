@@ -11,7 +11,6 @@ winetricks.desktop
 wine.desktop
 xed.desktop
 org.x.editor.desktop
-thunar.desktop
 xfce4-file-manager.desktop
 thunar-settings.desktop
 xfce4-terminal.desktop
@@ -104,7 +103,6 @@ sticky.desktop
 system-config-printer.desktop
 thingy.desktop
 thunar-bulk-rename.desktop
-thunar.desktop
 thunar-settings.desktop
 thunar-volman-settings.desktop
 time.desktop
