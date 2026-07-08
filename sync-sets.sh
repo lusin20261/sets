@@ -2,11 +2,15 @@
 # sync-sets.sh
 # Sincroniza los archivos del repositorio sets a sus ubicaciones locales
 set -e
+
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIGS="$REPO_DIR/configs"
+
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
+
 ok()   { echo -e "${GREEN}✔${NC} $1"; }
 warn() { echo -e "${YELLOW}⚠${NC}  $1"; }
 err()  { echo -e "${RED}✘${NC} $1"; exit 1; }
@@ -24,59 +28,69 @@ if [ -f "$REPO_DIR/notes.txt" ]; then
         eval "$cmd"
     done < "$REPO_DIR/notes.txt"
     ok "notes.txt ejecutado"
+    echo "-----------------------------------"
 fi
 
 # 2. applications/ → ~/.local/share/applications/
-#    rsync sincroniza el contenido directamente sin anidar la carpeta
 SRC_APPS="$REPO_DIR/applications/"
 DST_APPS="$HOME/.local/share/applications/"
 rsync -a --delete "$SRC_APPS" "$DST_APPS"
 ok "applications/ → $DST_APPS"
+echo "-----------------------------------"
 
-# 3. blacklist → ~/.config/rofi/blacklist
-SRC_BL="$REPO_DIR/blacklist"
-DST_BL="$HOME/.config/rofi/blacklist"
-cp -f "$SRC_BL" "$DST_BL"
-ok "blacklist → $DST_BL"
+# 3. Archivos de usuario (sin sudo)
+#    formato: "archivo_en_configs|destino_absoluto"
+declare -a USER_FILES=(
+    "blacklist|$HOME/.config/rofi/blacklist"
+    "tint2rc|$HOME/.config/tint2/tint2rc"
+    "thunarrc|$HOME/.config/Thunar/thunarrc"
+)
 
-# 4. rofi-blacklist-sync → ~/.local/bin/rofi-blacklist-sync  (+chmod +x)
+echo "Sincronizando configuraciones de usuario..."
+for entry in "${USER_FILES[@]}"; do
+    src="$CONFIGS/${entry%%|*}"
+    dst="${entry##*|}"
+    mkdir -p "$(dirname "$dst")"
+    cp -f "$src" "$dst"
+    ok "$(basename "$src") → $dst"
+done
+echo "-----------------------------------"
+
+# 4. Archivos de sistema (con sudo)
+#    formato: "archivo_en_configs|destino_absoluto"
+declare -a SYSTEM_FILES=(
+    "whitelist.json|/etc/brave/policies/managed/whitelist.json"
+    "default-search.json|/etc/brave/policies/managed/default-search.json"
+    "10-disable-dpms.conf|/etc/X11/xorg.conf.d/10-disable-dpms.conf"
+)
+
+echo "Sincronizando configuraciones de sistema..."
+for entry in "${SYSTEM_FILES[@]}"; do
+    src="$CONFIGS/${entry%%|*}"
+    dst="${entry##*|}"
+    sudo mkdir -p "$(dirname "$dst")"
+    sudo cp -f "$src" "$dst"
+    ok "$(basename "$src") → $dst"
+done
+echo "-----------------------------------"
+
+# 5. rofi-blacklist-sync → ~/.local/bin/  (+chmod +x)
 SRC_RBS="$REPO_DIR/rofi-blacklist-sync"
 DST_RBS="$HOME/.local/bin/rofi-blacklist-sync"
 cp -f "$SRC_RBS" "$DST_RBS"
-sudo chmod +x "$DST_RBS"
-ok "rofi-blacklist-sync → $DST_RBS (chmod +x)"
-
-# 5. whitelist.json → /etc/brave/policies/managed/whitelist.json  (sudo)
-SRC_WL="$REPO_DIR/whitelist.json"
-DST_WL="/etc/brave/policies/managed/whitelist.json"
-sudo cp -f "$SRC_WL" "$DST_WL"
-ok "whitelist.json → $DST_WL"
+chmod +x "$DST_RBS"
+ok "rofi-blacklist-sync → $DST_RBS"
 echo "-----------------------------------"
 
-# 6. default-search.json → /etc/brave/policies/managed/default-search.json  (sudo)
-SRC_DS="$REPO_DIR/default-search.json"
-DST_DS="/etc/brave/policies/managed/default-search.json"
-sudo cp -f "$SRC_DS" "$DST_DS"
-ok "default-search.json → $DST_DS"
-echo "-----------------------------------"
-
-# 7. Ejecutar rofi-blacklist-sync ya instalado, para regenerar el menú de Rofi
-"$HOME/.local/bin/rofi-blacklist-sync"
-ok "Menú de Rofi regenerado"
-
-echo -e "${GREEN}¡Sincronización completada!${NC}"
-
-# 8. 10-disable-dpms.conf → /etc/X11/xorg.conf.d/10-disable-dpms.conf  (sudo)
-SRC_DPMS="$REPO_DIR/10-disable-dpms.conf"
-DST_DPMS="/etc/X11/xorg.conf.d/10-disable-dpms.conf"
-sudo cp -f "$SRC_DPMS" "$DST_DPMS"
-ok "10-disable-dpms.conf → $DST_DPMS"
-
-# 9. tint2rc → ~/.config/tint2/tint2rc
-SRC_TINT2="$REPO_DIR/tint2rc"
-DST_TINT2="$HOME/.config/tint2/tint2rc"
-cp -f "$SRC_TINT2" "$DST_TINT2"
-ok "tint2rc → $DST_TINT2"
+# 6. Recargar tint2
 killall tint2 2>/dev/null || true
 (tint2 &>/dev/null &)
 ok "tint2 recargado"
+echo "-----------------------------------"
+
+# 7. Regenerar menú de Rofi
+"$HOME/.local/bin/rofi-blacklist-sync"
+ok "Menú de Rofi regenerado"
+
+echo "-----------------------------------"
+echo -e "${GREEN}¡Sincronización completada!${NC}"
