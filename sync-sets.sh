@@ -57,6 +57,12 @@ for entry in "${USER_FILES[@]}"; do
 done
 echo "-----------------------------------"
 
+# 3.5 Si es máquina maestra, quitar veyon-master.desktop de la blacklist
+if [ -f "$HOME/.local/isMaster" ]; then
+    sed -i '/^veyon-master\.desktop$/d' "$HOME/.config/rofi/blacklist"
+    ok "Máquina maestra: veyon-master.desktop removido de blacklist"
+fi
+
 # 4. Archivos de sistema (con sudo)
 #    formato: "archivo_en_configs|destino_absoluto"
 declare -a SYSTEM_FILES=(
