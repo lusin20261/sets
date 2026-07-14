@@ -47,6 +47,7 @@ declare -a USER_FILES=(
     "gtk-bookmarks|$HOME/.config/gtk-3.0/bookmarks"
     "rc.xml|$HOME/.config/openbox/rc.xml"
     "cerrar-ventana.sh|$HOME/.local/bin/cerrar-ventana.sh"
+    "reboot.sh|$HOME/.local/bin/reboot.sh"
 )
 
 echo "Sincronizando configuraciones de usuario..."

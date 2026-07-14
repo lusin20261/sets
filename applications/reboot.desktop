@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Reiniciar equipo
+Comment=Reiniciar el equipo
+Exec=/home/lab/.local/bin/reboot.sh
+Icon=system-reboot
+Terminal=false
+Categories=System;
+Keywords=reiniciar;reboot;
