@@ -5,3 +5,4 @@ sudo apt purge -y 'bluez*'
 sudo apt autoremove --purge -y
 sudo apt clean
 xdg-settings set default-web-browser brave-browser.desktop
+sudo usermod -aG video,render lab
