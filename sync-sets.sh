@@ -94,10 +94,8 @@ chmod +x "$DST_RBS"
 ok "rofi-blacklist-sync → $DST_RBS"
 echo "-----------------------------------"
 # 7. Wrapper de actualizar-lab en PATH
-cat > "$HOME/.local/bin/actualizar-lab" << EOF
-#!/bin/bash
-exec /home/lab/repositorios/sets/actualizar.sh "\$@"
-EOF
+printf '#!/bin/bash\nexec /home/lab/repositorios/sets/actualizar.sh "$@"\n' \
+    > "$HOME/.local/bin/actualizar-lab"
 chmod +x "$HOME/.local/bin/actualizar-lab"
 ok "actualizar-lab → ~/.local/bin/actualizar-lab"
 echo "-----------------------------------"
