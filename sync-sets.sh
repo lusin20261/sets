@@ -61,6 +61,7 @@ declare -a SYSTEM_FILES=(
     "default-search.json|/etc/brave/policies/managed/default-search.json"
     "10-disable-dpms.conf|/etc/X11/xorg.conf.d/10-disable-dpms.conf"
     "gpu-flags.json|/etc/brave/policies/managed/gpu-flags.json"
+    "gpu-swiftshader.json|/etc/brave/policies/managed/gpu-swiftshader.json"
 )
 echo "Sincronizando configuraciones de sistema..."
 for entry in "${SYSTEM_FILES[@]}"; do
