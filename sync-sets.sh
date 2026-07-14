@@ -93,22 +93,22 @@ cp -f "$SRC_RBS" "$DST_RBS"
 chmod +x "$DST_RBS"
 ok "rofi-blacklist-sync → $DST_RBS"
 echo "-----------------------------------"
-# 7. Recargar tint2
-killall tint2 2>/dev/null || true
-(tint2 &>/dev/null &)
-ok "tint2 recargado"
-echo "-----------------------------------"
-# 8. Regenerar menú de Rofi
-"$HOME/.local/bin/rofi-blacklist-sync"
-ok "Menú de Rofi regenerado"
-echo "-----------------------------------"
-# 9. Recargar Openbox
-openbox --reconfigure
-ok "Openbox recargado"
-echo "-----------------------------------"
-# 10. Symlink de actualizar-lab en PATH
+# 7. Symlink de actualizar-lab en PATH
 ln -sf "$REPO_DIR/actualizar.sh" "$HOME/.local/bin/actualizar-lab"
 chmod +x "$HOME/.local/bin/actualizar-lab"
 ok "actualizar-lab → ~/.local/bin/actualizar-lab"
+echo "-----------------------------------"
+# 8. Recargar tint2
+killall tint2 2>/dev/null || true
+setsid tint2 &>/dev/null &
+ok "tint2 recargado"
+echo "-----------------------------------"
+# 9. Regenerar menú de Rofi
+"$HOME/.local/bin/rofi-blacklist-sync"
+ok "Menú de Rofi regenerado"
+echo "-----------------------------------"
+# 10. Recargar Openbox
+openbox --reconfigure
+ok "Openbox recargado"
 echo "-----------------------------------"
 echo -e "${GREEN}¡Sincronización completada!${NC}"
