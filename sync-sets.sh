@@ -106,4 +106,9 @@ echo "-----------------------------------"
 openbox --reconfigure
 ok "Openbox recargado"
 echo "-----------------------------------"
+# 10. Symlink de actualizar-lab en PATH
+ln -sf "$REPO_DIR/actualizar.sh" "$HOME/.local/bin/actualizar-lab"
+chmod +x "$HOME/.local/bin/actualizar-lab"
+ok "actualizar-lab → ~/.local/bin/actualizar-lab"
+echo "-----------------------------------"
 echo -e "${GREEN}¡Sincronización completada!${NC}"
