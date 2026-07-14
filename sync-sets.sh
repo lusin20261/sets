@@ -94,10 +94,14 @@ chmod +x "$DST_RBS"
 ok "rofi-blacklist-sync → $DST_RBS"
 echo "-----------------------------------"
 # 7. Wrapper de actualizar-lab en PATH
-printf '%s\n' '#!/bin/bash' 'exec /home/lab/repositorios/sets/actualizar.sh "$@"' \
-    > "$HOME/.local/bin/actualizar-lab"
-chmod +x "$HOME/.local/bin/actualizar-lab"
-ok "actualizar-lab → ~/.local/bin/actualizar-lab"
+if [ ! -f "$HOME/.local/bin/actualizar-lab" ]; then
+    printf '%s\n' '#!/bin/bash' 'exec /home/lab/repositorios/sets/actualizar.sh "$@"' \
+        > "$HOME/.local/bin/actualizar-lab"
+    chmod +x "$HOME/.local/bin/actualizar-lab"
+    ok "actualizar-lab creado → ~/.local/bin/actualizar-lab"
+else
+    ok "actualizar-lab ya existe → sin cambios"
+fi
 echo "-----------------------------------"
 # 8. Recargar tint2
 killall tint2 2>/dev/null || true
