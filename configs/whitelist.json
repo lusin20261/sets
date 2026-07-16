@@ -6,6 +6,8 @@
     "127.0.0.1",
     "codi.link",
     "*.codi.link",
+    "youtube.com",
+    "*youtube.com",
 
     "paintz.app",
     "*paintz.app",
