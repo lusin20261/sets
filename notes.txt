@@ -6,4 +6,6 @@ sudo apt autoremove --purge -y
 sudo apt clean
 xdg-settings set default-web-browser brave-browser.desktop
 sudo usermod -aG video,render lab
-sudo apt install -y scratch
+sudo apt install -y flatpak
+sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+sudo flatpak install -y flathub edu.mit.Scratch
