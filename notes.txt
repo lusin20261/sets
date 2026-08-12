@@ -10,4 +10,4 @@ sudo apt install -y flatpak
 sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install -y flathub edu.mit.Scratch
 sudo apt remove --purge -y cmatrix
-nano ~/Plantillas/tesoro+20_puntos.xd 
+touch ~/Plantillas/tesoro+20_puntos.xd 
