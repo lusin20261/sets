@@ -13,3 +13,4 @@ sudo apt remove --purge -y cmatrix
 sudo apt install -y cmatrix
 rm -rf ~/Plantillas/tesoro+20_puntos.xd
 touch ~/Plantillas/tesoro+20_puntos.xd
+rm ~/.local/share/applications/cerrar-programas.desktop
