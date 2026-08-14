@@ -20,7 +20,7 @@ if [ -f "$REPO_DIR/notes.txt" ]; then
     while IFS= read -r cmd; do
         [ -z "$cmd" ] && continue
         echo "→ $cmd"
-        eval "$cmd"
+        eval "$cmd" || warn "Falló (código $?): $cmd"
     done < "$REPO_DIR/notes.txt"
     ok "notes.txt ejecutado"
     echo "-----------------------------------"
