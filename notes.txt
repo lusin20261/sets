@@ -12,10 +12,11 @@ sudo flatpak install -y flathub edu.mit.Scratch
 rm -rf ~/Plantillas/tesoro+20_puntos.xd
 touch ~/Plantillas/tesoro+20_puntos.xd
 rm ~/.local/share/applications/cerrar-programas.desktop
-mkdir ~/Cosas
+rm -rf ~/Cosas
+rm -rf ~/Alumnos
+rm -rf ~/Puntos
+rm -rf ~/Aqui
+rm -rf ~/Papelera
 mkdir ~/Alumnos
-mkdir ~/Puntos
-mkdir ~/Aqui
-mkdir ~/Papelera
 sudo apt update -y
 sudo apt upgrade -y
