@@ -9,8 +9,6 @@ sudo usermod -aG video,render lab
 sudo apt install -y flatpak
 sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install -y flathub edu.mit.Scratch
-sudo apt remove --purge -y cmatrix
-sudo apt install -y cmatrix
 rm -rf ~/Plantillas/tesoro+20_puntos.xd
 touch ~/Plantillas/tesoro+20_puntos.xd
 rm ~/.local/share/applications/cerrar-programas.desktop
@@ -19,3 +17,5 @@ mkdir ~/Alumnos
 mkdir ~/Puntos
 mkdir ~/Aqui
 mkdir ~/Papelera
+sudo apt update -y
+sudo apt upgrade -y
