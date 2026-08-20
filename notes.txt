@@ -13,10 +13,9 @@ rm -rf ~/Plantillas/tesoro+20_puntos.xd
 touch ~/Plantillas/tesoro+20_puntos.xd
 rm ~/.local/share/applications/cerrar-programas.desktop
 rm -rf ~/Cosas
-rm -rf ~/Alumnos
 rm -rf ~/Puntos
 rm -rf ~/Aqui
 rm -rf ~/Papelera
-mkdir ~/Alumnos
 sudo apt update -y
 sudo apt upgrade -y
+sudo apt install tree -y
