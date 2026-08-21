@@ -16,6 +16,8 @@ rm -rf ~/Cosas
 rm -rf ~/Puntos
 rm -rf ~/Aqui
 rm -rf ~/Papelera
+rm -rf ~/Alumnos
+mkdir ~/Alumnos
 sudo apt update -y
 sudo apt upgrade -y
 sudo apt install tree -y
