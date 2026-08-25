@@ -1,0 +1,19 @@
+program_options:
+  automount: true
+  notify: true
+  tray: true
+
+device_config:
+  - options:
+      automount: true
+
+notifications:
+  timeout: 1.5
+  device_added: null
+  device_removed: null
+  device_mounted: >
+    thunar {mount_path}
+  device_unmounted: null
+  device_unlocked: null
+  device_locked: null
+  job_failed: null

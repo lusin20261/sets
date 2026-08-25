@@ -41,6 +41,7 @@ declare -a USER_FILES=(
     "rc.xml|$HOME/.config/openbox/rc.xml"
     "cerrar-ventana.sh|$HOME/.local/bin/cerrar-ventana.sh"
     "reboot.sh|$HOME/.local/bin/reboot.sh"
+    "udiskie-config.yml|$HOME/.config/udiskie/config.yml"
 )
 echo "Sincronizando configuraciones de usuario..."
 for entry in "${USER_FILES[@]}"; do
