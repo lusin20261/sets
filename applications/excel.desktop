@@ -1,9 +1,10 @@
 [Desktop Entry]
-Version=1.0
-Type=Application
 Name=Excel
-Comment=Abre MS Excel Online
-Exec=brave-browser --app=https://excel.cloud.microsoft/
-Icon=web-browser
+Exec=/home/lab/.local/bin/linoffice/linoffice.sh excel %F
 Terminal=false
-Categories=Network;
+Type=Application
+Icon=/home/lab/.local/bin/linoffice/apps/excel/icon.svg
+StartupWMClass=Microsoft Excel
+Comment=Spreadsheet software for data analysis and visualization
+Categories=Office
+MimeType=application/vnd.ms-excel;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;application/vnd.openxmlformats-officedocument.spreadsheetml.template;application/vnd.ms-excel.sheet.macroEnabled.12;application/vnd.ms-excel.template.macroEnabled.12;application/vnd.ms-excel.addin.macroEnabled.12;application/vnd.ms-excel.sheet.binary.macroEnabled.12;
