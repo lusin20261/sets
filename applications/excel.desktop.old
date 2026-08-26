@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Excel
+Comment=Abre MS Excel Online
+Exec=brave-browser --app=https://excel.cloud.microsoft/
+Icon=web-browser
+Terminal=false
+Categories=Network;
