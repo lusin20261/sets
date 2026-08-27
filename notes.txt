@@ -18,6 +18,8 @@ rm -rf ~/Aqui
 rm -rf ~/Papelera
 rm -rf ~/Alumnos
 mkdir ~/Alumnos
+rm -rf ~/Escritorio
+mkdir ~/Escritorio
 sudo apt update -y
 sudo apt upgrade -y
 sudo apt install tree -y
