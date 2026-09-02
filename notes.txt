@@ -17,6 +17,7 @@ rm -rf ~/Puntos
 rm -rf ~/Aqui
 rm -rf ~/Papelera
 rm -rf ~/Alumnos
+rm -rf ~/alumnos
 mkdir ~/Alumnos
 rm -rf ~/Escritorio
 mkdir ~/Escritorio
