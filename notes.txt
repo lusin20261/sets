@@ -7,6 +7,7 @@ sudo apt clean
 xdg-settings set default-web-browser brave-browser.desktop
 sudo usermod -aG video,render lab
 sudo apt install -y flatpak
+sudo apt install -y bastet
 sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install -y flathub edu.mit.Scratch
 rm -rf ~/Plantillas/tesoro+20_puntos.xd
