@@ -1,0 +1,28 @@
+sudo apt purge -y 'libreoffice*'
+rm -rf ~/.config/libreoffice
+sudo apt purge -y blueman bluez bluez-tools pulseaudio-module-bluetooth
+sudo apt purge -y 'bluez*'
+sudo apt autoremove --purge -y
+sudo apt clean
+xdg-settings set default-web-browser brave-browser.desktop
+sudo usermod -aG video,render lab
+sudo apt install -y flatpak
+sudo apt install -y bastet
+sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+sudo flatpak install -y flathub edu.mit.Scratch
+rm -rf ~/Plantillas/tesoro+20_puntos.xd
+touch ~/Plantillas/tesoro+20_puntos.xd
+rm ~/.local/share/applications/cerrar-programas.desktop
+rm -rf ~/Cosas
+rm -rf ~/Puntos
+rm -rf ~/Aqui
+rm -rf ~/Papelera
+rm -rf ~/Alumnos
+rm -rf ~/alu*
+rm -rf ~/esc*
+mkdir ~/Alumnos
+rm -rf ~/Escritorio
+mkdir ~/Escritorio
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt install tree -y
