@@ -63,7 +63,7 @@ banner() {
   printf '  %s║%s%s      ★   Q U I Z   E S C O L A R   ★          %s%s║%s\n' "$CYN" "$RST" "$YEL$BOLD" "$RST" "$CYN" "$RST"
   printf '  %s║                                               ║%s\n' "$CYN" "$RST"
   printf '  %s║%s  Cultura general · Mate · Inglés · Chino      %s║%s\n' "$CYN" "$RST" "$CYN" "$RST"
-  printf '  %s║%s  Hecho por tu profe Luis :3                     %s║%s\n' "$CYN" "$RST" "$CYN" "$RST"
+  printf '  %s║%s  by Profe Luis :3                             %s║%s\n' "$CYN" "$RST" "$CYN" "$RST"
   printf '  %s╚═══════════════════════════════════════════════╝%s\n\n' "$CYN" "$RST"
 }
 
