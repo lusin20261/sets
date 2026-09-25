@@ -114,10 +114,15 @@ trap 'exit 130' INT TERM
 trap 'RESIZED=1' WINCH
 
 # ─── 4. Reloj sin crear procesos (bash 5: EPOCHREALTIME) ──────────────────
-actualizar_reloj() {   # deja el resultado en AHORA_US (variable global)
-  local s u
-  s="${EPOCHREALTIME%.*}"
-  u="${EPOCHREALTIME#*.}"
+
+actualizar_reloj() {
+  local reloj s u
+  reloj="$EPOCHREALTIME"
+  reloj="${reloj//,/.}"
+
+  s="${reloj%.*}"
+  u="${reloj#*.}"
+
   AHORA_US=$(( 10#$s * 1000000 + 10#$u ))
 }
 
