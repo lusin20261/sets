@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=TypBoom
+Comment=Juego de typing
+Exec=kitty -e /home/lab/repositorios/sets/typBoom.sh
+Icon=utilities-terminal
+Terminal=false
+Categories=System;
