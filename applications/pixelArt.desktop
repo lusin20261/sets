@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=PixelArt
+Comment=Juego de typing
+Exec=kitty -e /home/lab/repositorios/sets/pixelArt.sh
+Icon=utilities-terminal
+Terminal=false
+Categories=System;
