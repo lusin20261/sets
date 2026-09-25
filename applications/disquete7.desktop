@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Disquete7
+Comment=Juego de typing
+Exec=kitty -e /home/lab/repositorios/sets/disquete7.sh
+Icon=utilities-terminal
+Terminal=false
+Categories=System;
