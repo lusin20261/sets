@@ -6,6 +6,8 @@ rm -rf ~/Cosas
 rm -rf ~/Puntos
 rm -rf ~/Aqui
 rm -rf ~/Papelera
+rm -rf ~/Alumnos
+mkdir ~/Alumnos
 rm -rf ~/alu*
 rm -rf ~/esc*
 rm -rf ~/Escritorio
