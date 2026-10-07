@@ -10,3 +10,5 @@ rm -rf ~/alu*
 rm -rf ~/esc*
 rm -rf ~/Escritorio
 mkdir ~/Escritorio
+rm -rf ~/Alumnos
+mkdir ~/Alumnos
