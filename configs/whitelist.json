@@ -197,6 +197,7 @@
 
     "github.com",
     "*.github.com",
+    "*.github.io",
     "githubusercontent.com",
     "*.githubusercontent.com",
     "raw.githubusercontent.com",
