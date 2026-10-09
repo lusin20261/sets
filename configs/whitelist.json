@@ -2,9 +2,8 @@
   "URLBlocklist": [
     "*",
     "doodles.google",
-    "*doodles.google",
-    "google.com/logos*",
-    "google.com/fbx*"
+    "google.com/logos",
+    "google.com/fbx"
   ],
   "URLAllowlist": [
 
