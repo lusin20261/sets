@@ -1,5 +1,9 @@
 {
-  "URLBlocklist": ["*"],
+  "URLBlocklist": [
+    "*",
+    "doodles.google",
+    "*doodles.google"
+  ],
   "URLAllowlist": [
 
     "localhost",
