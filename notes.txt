@@ -1,6 +1,3 @@
-xdg-settings set default-web-browser brave-browser.desktop
-sudo usermod -aG video,render lab
-sudo apt install -y bastet
 rm ~/.local/share/applications/cerrar-programas.desktop
 rm -rf ~/Cosas
 rm -rf ~/Puntos
@@ -12,3 +9,5 @@ rm -rf ~/Escritorio
 mkdir ~/Escritorio
 rm -rf ~/Alumnos
 mkdir ~/Alumnos
+sudo apt update -y
+sudo apt upgrade -y
