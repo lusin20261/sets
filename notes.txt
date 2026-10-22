@@ -9,3 +9,8 @@ rm -rf ~/Escritorio
 mkdir ~/Escritorio
 rm -rf ~/Alumnos
 mkdir ~/Alumnos
+rm -rf ~/4*
+rm -rf ~/5*
+rm -rf ~/6*
+sudo apt upgrade -y
+sudo apt update -y
