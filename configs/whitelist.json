@@ -5,7 +5,7 @@
     "google.com/logos",
     "google.com/fbx",
     "sites.google.com",
-    "google.com/search?q=minecaft",
+    "google.com/search?q=minecaft*",
     "santatracker.google.com",
   ],
   "URLAllowlist": [
