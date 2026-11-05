@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Fuera de Contexto
+Comment=Juego de decisiones
+Exec=kitty -e /home/lab/repositorios/sets/fuera_de_contexto.sh
+Icon=utilities-terminal
+Terminal=false
+Categories=System;
