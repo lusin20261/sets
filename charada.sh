@@ -308,6 +308,7 @@ instrucciones() {
   printf '   • Al final escribe tu %snombre%s y entrarás a la tabla de puntajes.\n' "$CYN$BOLD" "$RST"
   printf '   • La opción 5 permite jugar con otros equipos por %sred local%s.\n' "$CYN$BOLD" "$RST"
   printf '   • En multijugador son 20 preguntas; cada acierto vale 1 punto y el resultado es de 0 a 20.\n'
+  printf '   • La sala se busca automáticamente en la red local y espera 2 minutos antes de iniciar.\n'
   pausa_enter
 }
 
@@ -361,7 +362,7 @@ Uso: $(basename "$0") [opción]
 
 Multijugador LAN:
   Opción 5 del menú. Requiere charada_lan.py junto a este archivo y Python 3.
-  El anfitrión comparte su IP; el puerto predeterminado es 50555.
+  Las salas se detectan automáticamente en la red local; no es necesario escribir IP.
   QUIZ_LAN_PORT=50555 permite cambiar el puerto TCP.
 
 Variables:

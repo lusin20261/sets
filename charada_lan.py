@@ -7,11 +7,14 @@ El servidor escucha en todas las interfaces IPv4, puerto 50555 por defecto.
 
 from __future__ import annotations
 
+import concurrent.futures
+import ipaddress
 import json
 import os
 import random
 import re
 import socket
+import subprocess
 import socketserver
 import sys
 import threading
@@ -21,7 +24,7 @@ from pathlib import Path
 from typing import Any
 
 PORT = int(os.environ.get("QUIZ_LAN_PORT", "50555"))
-COUNTDOWN_SECONDS = 60
+COUNTDOWN_SECONDS = 120
 QUESTIONS_PER_GAME = 20
 MAX_PLAYERS = 60
 CATEGORY_NAMES = {
@@ -126,6 +129,18 @@ class RoomState:
     def snapshot_names(self) -> list[str]:
         with self.condition:
             return [p.name for p in self.players if not p.disconnected]
+
+    def discovery_info(self) -> dict[str, Any] | None:
+        """Return public room data only while the lobby is still accepting players."""
+        with self.condition:
+            remaining = self.start_at - time.monotonic()
+            if self.started or remaining <= 0:
+                return None
+            players = [p.name for p in self.players if not p.disconnected]
+            return {
+                "remaining": max(0, int(remaining + 0.999)),
+                "players": players,
+            }
 
     def register(self, name: str, password: str, conn: socket.socket) -> tuple[Player | None, str | None, int]:
         with self.condition:
@@ -238,6 +253,12 @@ class QuizHandler(socketserver.BaseRequestHandler):
             self.request.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
             reader = self.request.makefile("r", encoding="utf-8", newline="\n")
             hello = receive_json(reader)
+            if hello and hello.get("type") == "discover":
+                room_info = self.server.room.discovery_info()
+                if room_info is not None:
+                    send_json(self.request, threading.Lock(), {"type": "room_found", **room_info})
+                return
+
             if not hello or hello.get("type") != "join":
                 send_json(self.request, threading.Lock(), {"type": "error", "message": "Solicitud de conexión no válida."})
                 return
@@ -318,27 +339,133 @@ def countdown_worker(room: RoomState) -> None:
         time.sleep(1)
 
 
-def local_ipv4_addresses() -> list[str]:
-    addresses: set[str] = set()
+def local_ipv4_networks() -> tuple[list[ipaddress.IPv4Network], set[str]]:
+    """Detect connected IPv4 networks; keep scans bounded on unusually large subnets."""
+    networks: set[ipaddress.IPv4Network] = set()
+    local_addresses: set[str] = set()
+
     try:
-        for item in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
-            address = item[4][0]
-            if not address.startswith("127."):
-                addresses.add(address)
-    except OSError:
+        result = subprocess.run(
+            ["ip", "-j", "-4", "addr", "show", "up"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=3,
+        )
+        interfaces = json.loads(result.stdout)
+        for interface in interfaces:
+            if interface.get("ifname") == "lo":
+                continue
+            for address in interface.get("addr_info", []):
+                if address.get("family") != "inet":
+                    continue
+                local = str(address.get("local", ""))
+                if not local or local.startswith(("127.", "169.254.")):
+                    continue
+                try:
+                    iface = ipaddress.ip_interface(f"{local}/{address['prefixlen']}")
+                except (KeyError, ValueError):
+                    continue
+                local_addresses.add(local)
+                network = iface.network
+                # A /16 or larger can contain tens of thousands of addresses.
+                # In that case scan the /24 containing this machine instead.
+                if network.num_addresses > 4096 or network.prefixlen >= 31:
+                    network = ipaddress.ip_network(f"{local}/24", strict=False)
+                networks.add(network)
+    except (OSError, subprocess.SubprocessError, json.JSONDecodeError):
         pass
-    try:
-        probe = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    # Fallback for systems where the `ip` utility is unavailable.
+    if not networks:
         try:
-            probe.connect(("192.0.2.1", 9))
-            address = probe.getsockname()[0]
-            if not address.startswith("127."):
-                addresses.add(address)
-        finally:
-            probe.close()
-    except OSError:
-        pass
-    return sorted(addresses)
+            for item in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
+                local = item[4][0]
+                if local.startswith(("127.", "169.254.")):
+                    continue
+                local_addresses.add(local)
+                networks.add(ipaddress.ip_network(f"{local}/24", strict=False))
+        except (OSError, ValueError):
+            pass
+
+    # Last resort: ask the routing table which local address reaches an external test IP.
+    if not networks:
+        try:
+            probe = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            try:
+                probe.connect(("192.0.2.1", 9))
+                local = probe.getsockname()[0]
+                if not local.startswith(("127.", "169.254.")):
+                    local_addresses.add(local)
+                    networks.add(ipaddress.ip_network(f"{local}/24", strict=False))
+            finally:
+                probe.close()
+        except (OSError, ValueError):
+            pass
+
+    return sorted(networks, key=lambda net: (int(net.network_address), net.prefixlen)), local_addresses
+
+
+def probe_room(host: str) -> dict[str, Any] | None:
+    """Ask a host whether it is running an open Quiz Escolar lobby."""
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    reader = None
+    try:
+        sock.settimeout(0.35)
+        sock.connect((host, PORT))
+        sock.settimeout(0.8)
+        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        reader = sock.makefile("r", encoding="utf-8", newline="\n")
+        if not send_json(sock, threading.Lock(), {"type": "discover"}):
+            return None
+        response = receive_json(reader)
+        if response and response.get("type") == "room_found":
+            return {
+                "host": host,
+                "remaining": int(response.get("remaining", 0)),
+                "players": response.get("players", []),
+            }
+    except (OSError, TimeoutError, UnicodeError):
+        return None
+    finally:
+        try:
+            if reader is not None:
+                reader.close()
+        except OSError:
+            pass
+        sock.close()
+    return None
+
+
+def discover_rooms() -> list[dict[str, Any]]:
+    """Scan detected local subnets for Quiz Escolar rooms on the configured port."""
+    networks, local_addresses = local_ipv4_networks()
+    if not networks:
+        print("No pude detectar una red IPv4 activa en este equipo.")
+        return []
+
+    targets: set[str] = set()
+    for network in networks:
+        for address in network.hosts():
+            host = str(address)
+            if host not in local_addresses:
+                targets.add(host)
+
+    if not targets:
+        print("No se encontraron equipos que pueda revisar en la red local.")
+        return []
+
+    print("\nEscaneando la red local en busca de salas activas...", flush=True)
+    rooms: list[dict[str, Any]] = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=128) as executor:
+        futures = [executor.submit(probe_room, host) for host in targets]
+        for future in concurrent.futures.as_completed(futures):
+            room = future.result()
+            if room is not None:
+                rooms.append(room)
+
+    rooms.sort(key=lambda room: tuple(int(part) for part in room["host"].split(".")))
+    return rooms
 
 
 def ask_name() -> str:
@@ -370,6 +497,27 @@ def read_answer() -> str:
         print("Escribe únicamente a, b, c o d.")
 
 
+def render_lobby(remaining: int, players: list[str]) -> None:
+    """Redraw the lobby in place instead of printing a new line every second."""
+    minutes, seconds = divmod(max(0, remaining), 60)
+    names = players or ["Esperando jugadores..."]
+    if sys.stdout.isatty():
+        sys.stdout.write("\033[2J\033[H")
+        print("╔══════════════════════════════════════════════════════╗")
+        print("║                 QUIZ ESCOLAR · SALA LAN              ║")
+        print("╚══════════════════════════════════════════════════════╝")
+        print(f"\n  La partida comienza en: {minutes:02d}:{seconds:02d}")
+        print(f"  Jugadores conectados ({len(players)}):")
+        for player_name in names:
+            print(f"    • {player_name}")
+        print("\n  Puedes seguir ingresando mientras el contador esté activo.")
+        sys.stdout.flush()
+    else:
+        line = f"Sala LAN | Empieza en {minutes:02d}:{seconds:02d} | Jugadores ({len(players)}): {', '.join(names)}"
+        sys.stdout.write("\r\033[2K" + line[:200])
+        sys.stdout.flush()
+
+
 def play_as_client(host: str, password: str, name: str) -> None:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     reader = None
@@ -397,6 +545,7 @@ def play_as_client(host: str, password: str, name: str) -> None:
             return
 
         print("\nConectado a la sala. La cuenta regresiva comenzó al crearla.")
+        render_lobby(int(first.get("remaining", COUNTDOWN_SECONDS)), first.get("players", []))
         started = False
         while not started:
             message = receive_json(reader)
@@ -405,17 +554,15 @@ def play_as_client(host: str, password: str, name: str) -> None:
                 return
             kind = message.get("type")
             if kind == "countdown":
-                remaining = int(message.get("remaining", 0))
-                names = message.get("players", [])
-                names_text = ", ".join(names) if names else "Esperando jugadores"
-                line = f"\r  Empieza en {remaining:02d} s  |  Jugadores ({len(names)}): {names_text}"
-                print(line[:180].ljust(180), end="", flush=True)
+                render_lobby(int(message.get("remaining", 0)), message.get("players", []))
             elif kind == "start":
                 started = True
             elif kind == "error":
                 print(f"\n{message.get('message', 'Error de sala.')}")
                 return
-        print("\n\n¡Comienza la partida! Son 20 preguntas. Cada acierto vale 1 punto.\n")
+        if sys.stdout.isatty():
+            sys.stdout.write("\033[2J\033[H")
+        print("\n¡Comienza la partida! Son 20 preguntas. Cada acierto vale 1 punto.\n")
 
         for _ in range(QUESTIONS_PER_GAME):
             message = receive_json(reader)
@@ -504,16 +651,9 @@ def create_room(bank: list[dict[str, str]]) -> None:
     timer_thread.start()
 
     print("\nSala creada correctamente.")
-    addresses = local_ipv4_addresses()
-    if addresses:
-        print("Comparte una de estas direcciones con los demás jugadores:")
-        for address in addresses:
-            print(f"  IP: {address}   Puerto: {PORT}")
-    else:
-        print(f"No pude detectar la IP automáticamente. Puerto: {PORT}")
-        print("En Linux puedes consultarla con: hostname -I")
+    print("Los demás equipos pueden encontrarla desde 'Unirse a una sala'.")
     print(f"Contraseña de la sala: {password}")
-    print("El contador de 60 segundos ya está en marcha.\n")
+    print("El contador de 02:00 ya está en marcha.\n")
 
     try:
         play_as_client("127.0.0.1", password, name)
@@ -525,13 +665,34 @@ def create_room(bank: list[dict[str, str]]) -> None:
 def join_room(bank: list[dict[str, str]]) -> None:
     del bank  # El banco lo administra el servidor para que todos reciban las mismas preguntas.
     print("\n══ UNIRSE A UNA SALA LAN ══")
-    host = input("IP del equipo que creó la sala: ").strip()
-    if not host:
-        print("Debes escribir la IP del equipo anfitrión.")
+    rooms = discover_rooms()
+    if not rooms:
+        print("\nNo se encontraron salas disponibles.")
+        print("Comprueba que todos estén en la misma red y que el anfitrión haya creado la sala.")
         return
+
+    print(f"\nSe encontraron {len(rooms)} sala(s):\n")
+    for index, room in enumerate(rooms, start=1):
+        remaining = int(room["remaining"])
+        minutes, seconds = divmod(remaining, 60)
+        names = room.get("players", [])
+        print(f"  {index}) {room['host']}  |  {len(names)} jugador(es)  |  empieza en {minutes:02d}:{seconds:02d}")
+        if names:
+            print(f"     {', '.join(names)}")
+
+    if len(rooms) == 1:
+        selected = rooms[0]
+    else:
+        while True:
+            choice = input("\nElige la sala a la que deseas entrar: ").strip()
+            if choice.isdigit() and 1 <= int(choice) <= len(rooms):
+                selected = rooms[int(choice) - 1]
+                break
+            print("Selecciona uno de los números de la lista.")
+
     password = ask_password(create=False)
     name = ask_name()
-    play_as_client(host, password, name)
+    play_as_client(selected["host"], password, name)
 
 
 def main() -> int:
