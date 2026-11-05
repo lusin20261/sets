@@ -2,11 +2,13 @@
 # ══════════════════════════════════════════════════════════════════════════
 #  QUIZ ESCOLAR  —  Cultura general · Matemática · Inglés · Chino básico
 # ══════════════════════════════════════════════════════════════════════════
-#  Uso:        chmod +x quiz_escolar.sh && ./quiz_escolar.sh
+#  Uso:        chmod +x charada.sh && ./charada.sh
 #  Opciones:   --reset   borra la tabla de puntajes (pide confirmación)
 #              --help    muestra esta ayuda
 #  Variables:  QUIZ_SCORES=/ruta/puntajes.txt   dónde se guardan los puntajes
 #              NO_COLOR=1                       desactiva los colores
+#              Multijugador LAN: requiere Python 3 y charada_lan.py en la misma carpeta.
+#              QUIZ_LAN_PORT=50555              puerto TCP del modo multijugador
 #  Requiere:   bash 4+, coreutils (shuf) y una terminal en UTF-8.
 #              Para ver bien los caracteres chinos:  sudo apt install fonts-noto-cjk
 #
@@ -304,6 +306,25 @@ instrucciones() {
   printf '   • Si fallas, la racha vuelve a cero, pero verás la respuesta correcta.\n'
   printf '   • Escribe %ss%s en cualquier momento para terminar la partida.\n' "$BLU$BOLD" "$RST"
   printf '   • Al final escribe tu %snombre%s y entrarás a la tabla de puntajes.\n' "$CYN$BOLD" "$RST"
+  printf '   • La opción 5 permite jugar con otros equipos por %sred local%s.\n' "$CYN$BOLD" "$RST"
+  printf '   • En multijugador son 20 preguntas; cada acierto vale 1 punto y el resultado es de 0 a 20.\n'
+  pausa_enter
+}
+
+multijugador_lan() {
+  local script_dir
+  script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+  if ! command -v python3 >/dev/null 2>&1; then
+    printf '\n  %sEl modo multijugador requiere Python 3.%s\n' "$YEL" "$RST"
+    pausa_enter
+    return
+  fi
+  if [[ ! -f "$script_dir/charada_lan.py" ]]; then
+    printf '\n  %sNo se encuentra charada_lan.py junto a este script.%s\n' "$RED" "$RST"
+    pausa_enter
+    return
+  fi
+  python3 "$script_dir/charada_lan.py" "$0"
   pausa_enter
 }
 
@@ -315,7 +336,8 @@ menu_principal() {
     printf '     %s2)%s  Elegir una materia\n' "$BLU$BOLD" "$RST"
     printf '     %s3)%s  Tabla de puntajes\n' "$BLU$BOLD" "$RST"
     printf '     %s4)%s  Instrucciones\n' "$BLU$BOLD" "$RST"
-    printf '     %s5)%s  Salir\n\n' "$BLU$BOLD" "$RST"
+    printf '     %s5)%s  Multijugador (red local)\n' "$BLU$BOLD" "$RST"
+    printf '     %s6)%s  Salir\n\n' "$BLU$BOLD" "$RST"
     printf '  Elige una opción : '
     IFS= read -r op || salir
     case "${op//[[:space:]]/}" in
@@ -323,7 +345,8 @@ menu_principal() {
       2) menu_materias ;;
       3) mostrar_puntajes; pausa_enter ;;
       4) instrucciones ;;
-      5|s|S|q|Q) salir ;;
+      5) multijugador_lan ;;
+      6|s|S|q|Q) salir ;;
     esac
   done
 }
@@ -335,6 +358,11 @@ Quiz Escolar — juego de preguntas para la terminal
 Uso: $(basename "$0") [opción]
   --reset   borra la tabla de puntajes
   --help    muestra esta ayuda
+
+Multijugador LAN:
+  Opción 5 del menú. Requiere charada_lan.py junto a este archivo y Python 3.
+  El anfitrión comparte su IP; el puerto predeterminado es 50555.
+  QUIZ_LAN_PORT=50555 permite cambiar el puerto TCP.
 
 Variables:
   QUIZ_SCORES=/ruta/puntajes.txt   archivo de puntajes
