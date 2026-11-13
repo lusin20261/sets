@@ -308,6 +308,7 @@ instrucciones() {
   printf '   • Al final escribe tu %snombre%s y entrarás a la tabla de puntajes.\n' "$CYN$BOLD" "$RST"
   printf '   • La opción 5 permite jugar con otros equipos por %sred local%s.\n' "$CYN$BOLD" "$RST"
   printf '   • En multijugador son 20 preguntas; cada acierto vale 1 punto y el resultado es de 0 a 20.\n'
+  printf '   • Cada pregunta del multijugador tiene 10 segundos; si se acaba el tiempo, cuenta como incorrecta.\n'
   printf '   • La sala se busca automáticamente en la red local y espera 2 minutos antes de iniciar.\n'
   pausa_enter
 }
@@ -516,7 +517,7 @@ EN|¿Qué significa "I'm hungry"?|Tengo hambre|Tengo sed|Estoy cansado|Tengo fr�
 EN|¿Cuál de estas palabras es un color?|Purple|Pencil|Window|Monday
 EN|¿Cuál es el opuesto de "big"?|Small|Tall|Long|Fast
 EN|¿Cuál es el opuesto de "hot"?|Cold|Warm|Wet|Dry
-EN|¿Cuál es el plural de "child"?|Children|Childs|Childes|Childrens
+EN|¿Qué forma usamos para hablar de varios niños en inglés?|Children|Childs|Childes|Childrens
 EN|¿Cuál es el plural de "mouse"?|Mice|Mouses|Mices|Mousees
 EN|¿Cuál es el plural de "box"?|Boxes|Boxs|Boxies|Boxen
 EN|¿Cuál es el pasado de "go"?|Went|Goed|Gone|Going
@@ -536,9 +537,9 @@ EN|¿Cómo se dice "Me gusta la pizza" en inglés?|I like pizza|I am pizza|I hav
 EN|¿Cómo se dice "Tengo doce años" en inglés?|I am twelve years old|I have twelve years|I am twelve years|I have twelve years old
 
 # ── CHINO BÁSICO (con pinyin) ────────────────────────────────────────────
-ZH|¿Qué significa 你好 (nǐ hǎo)?|Hola|Adiós|Gracias|Por favor
+ZH|¿Qué saludo se escribe 你好 (nǐ hǎo)?|Hola|Adiós|Gracias|Por favor
 ZH|¿Qué significa 谢谢 (xièxie)?|Gracias|Hola|Perdón|Adiós
-ZH|¿Qué significa 再见 (zàijiàn)?|Adiós|Hola|Gracias|Buenos días
+ZH|¿Qué expresión china se usa para despedirse?|再见 (zàijiàn)|你好 (nǐ hǎo)|谢谢 (xièxie)|早上好 (zǎoshang hǎo)
 ZH|¿Qué significa 对不起 (duìbuqǐ)?|Lo siento / perdón|Gracias|De nada|Buenas noches
 ZH|¿Qué significa 不客气 (bú kèqi)?|De nada|Gracias|Hola|Adiós
 ZH|¿Qué significa 早上好 (zǎoshang hǎo)?|Buenos días|Buenas noches|Adiós|Gracias
@@ -581,6 +582,87 @@ ZH|¿Qué significa 妈妈 (māma)?|Mamá|Papá|Hermano|Abuelo
 ZH|¿Qué significa 爸爸 (bàba)?|Papá|Mamá|Abuela|Amigo
 ZH|¿Qué significa 红色 (hóngsè)?|Rojo|Azul|Verde|Amarillo
 ZH|¿Qué significa 中国 (Zhōngguó)?|China|Japón|Perú|Corea
+# ── NUEVAS PREGUNTAS · NIVEL 10 A 14 AÑOS ──────────────────────────────────
+CG|¿Qué órgano del cuerpo coordina nuestros pensamientos y movimientos?|El cerebro|El estómago|El corazón|Los riñones
+CG|¿Cuántos lados tiene un octágono?|8|6|7|9
+CG|¿Qué planeta está más cerca del Sol?|Mercurio|Venus|Marte|Júpiter
+CG|¿Qué instrumento mide la presión atmosférica?|Barómetro|Termómetro|Cronómetro|Anemómetro
+CG|¿En qué animal se convierte una oruga?|Mariposa|Rana|Abeja|Hormiga
+CG|¿En qué continente se encuentra el Perú?|América del Sur|Europa|Asia|África
+CG|¿Qué océano baña las costas del Perú?|Océano Pacífico|Océano Atlántico|Océano Índico|Océano Ártico
+CG|¿Cuál es el gas más abundante de la atmósfera terrestre?|Nitrógeno|Oxígeno|Dióxido de carbono|Hidrógeno
+CG|¿Cuántos planetas rocosos hay en el Sistema Solar?|4|2|6|8
+CG|¿Cómo se llama el cambio de estado de sólido a líquido?|Fusión|Evaporación|Condensación|Solidificación
+CG|¿Qué órgano permite que respiremos al expandirse y contraerse?|Los pulmones|El hígado|El estómago|El páncreas
+CG|¿Cuál de estas fuentes de energía es renovable?|La energía solar|El petróleo|El carbón|El gas natural
+CG|¿Cuál de estos animales es un anfibio?|La rana|La tortuga|El águila|El delfín
+CG|¿En qué estado se encuentra el agua de un cubo de hielo?|Sólido|Líquido|Gaseoso|Plasma
+CG|¿Qué parte del ojo regula la cantidad de luz que entra?|El iris|La retina|La córnea|El cristalino
+CG|¿Cuál es el órgano más grande del cuerpo humano?|La piel|El hígado|El cerebro|El pulmón
+CG|¿Qué fuerza nos mantiene sobre la superficie de la Tierra?|La gravedad|El magnetismo|La fricción|La electricidad
+CG|¿Qué nombre recibe un grupo de islas?|Archipiélago|Península|Continente|Valle
+CG|¿Qué animal peruano puede vivir en zonas muy altas de los Andes y da lana?|La alpaca|El cocodrilo|El delfín|El avestruz
+CG|¿Qué aparato transforma energía eléctrica en movimiento en muchos artefactos?|El motor eléctrico|El termómetro|La brújula|El microscopio
+MA|¿Cuánto es 9 × 8?|72|64|81|78
+MA|¿Cuánto es 125 ÷ 5?|25|20|15|30
+MA|¿Cuál es el 20% de 150?|30|20|25|35
+MA|¿Cuánto es 3/8 de 40?|15|12|18|20
+MA|¿Cuál es el resultado de -7 + 12?|5|-5|19|-19
+MA|Si x - 6 = 14, ¿cuánto vale x?|20|8|18|22
+MA|¿Cuánto es 4² + 2²?|20|12|24|18
+MA|¿Cuánto mide el perímetro de un rectángulo de 9 cm por 4 cm?|26 cm|13 cm|36 cm|18 cm
+MA|¿Cuál es el área de un cuadrado de lado 6 cm?|36 cm²|24 cm²|12 cm²|30 cm²
+MA|¿Cuánto es 1.2 + 0.8?|2|1.8|2.2|0.20
+MA|¿Qué fracción equivale a 0.25?|1/4|1/2|3/4|1/5
+MA|¿Cuál es el valor de 5 × (12 - 7)?|25|35|17|45
+MA|¿Cuántos grados tiene un ángulo llano?|180°|90°|270°|360°
+MA|¿Cuál es el número romano que representa 50?|L|X|C|D
+MA|¿Cuál es el máximo común divisor de 20 y 30?|10|5|15|20
+MA|Una mochila cuesta S/ 80 y tiene 25% de descuento. ¿Cuánto se descuenta?|S/ 20|S/ 15|S/ 25|S/ 40
+MA|¿Cuál es el siguiente número de la serie 5, 10, 20, 40, ...?|80|60|45|100
+MA|Si 4 lápices cuestan S/ 6, ¿cuánto cuesta un lápiz?|S/ 1.50|S/ 2.00|S/ 1.00|S/ 2.50
+MA|¿Cuánto es 2.5 × 4?|10|8|12|6
+MA|¿Cuántos mililitros hay en 2 litros?|2000|200|20|20000
+EN|¿Cómo se dice "ventana" en inglés?|Window|Door|Wall|Floor
+EN|¿Cómo se dice "hermana" en inglés?|Sister|Brother|Mother|Cousin
+EN|¿Qué significa "under" en español?|Debajo de|Encima de|Dentro de|Al lado de
+EN|Completa: She ___ my friend.|is|are|am|be
+EN|¿Cuál es el plural de "child"?|Children|Childs|Childes|Childrens
+EN|Si algo no está caliente, ¿qué adjetivo en inglés puede describirlo?|Cold|Warm|Big|Fast
+EN|Selecciona la traducción correcta de "yesterday".|Ayer|Hoy|Mañana|Ahora
+EN|¿Cómo se dice "mariposa" en inglés?|Butterfly|Bee|Bird|Fish
+EN|Completa la frase: "Yesterday I ___ to school".|Went|Goed|Gone|Goes
+EN|¿Qué significa "between"?|Entre|Detrás de|Debajo de|Lejos de
+EN|¿Cómo se dice "jueves" en inglés?|Thursday|Tuesday|Wednesday|Saturday
+EN|Completa: They ___ playing football.|are|is|am|be
+EN|¿Qué significa "hungry"?|Hambriento|Sediento|Cansado|Enojado
+EN|Selecciona el nombre de un color en inglés.|Purple|Run|Book|Happy
+EN|¿Cómo se dice "biblioteca" en inglés?|Library|Bookstore|Classroom|Kitchen
+EN|¿Cuál es el pronombre correcto para hablar de "María y yo"?|We|They|She|He
+EN|¿Qué palabra en inglés expresa que algo ocurre todo el tiempo?|Always|Never|Sometimes|Yesterday
+EN|¿Cómo se dice "tortuga" en inglés?|Turtle|Rabbit|Duck|Horse
+EN|Completa: I ___ twelve years old.|am|is|are|be
+EN|¿Qué significa "because"?|Porque|Pero|Aunque|Entonces
+ZH|¿Qué significa 你好 (nǐ hǎo)?|Hola|Adiós|Gracias|Por favor
+ZH|¿Qué significa 再见 (zàijiàn)?|Adiós|Hola|Gracias|Buenos días
+ZH|En chino mandarín, ¿cómo se dice "gracias"?|谢谢 (xièxie)|对不起 (duìbuqǐ)|再见 (zàijiàn)|你好 (nǐ hǎo)
+ZH|Cuando quieres pedir disculpas en mandarín, ¿qué expresión usas?|对不起 (duìbuqǐ)|你好 (nǐ hǎo)|谢谢 (xièxie)|再见 (zàijiàn)
+ZH|¿Qué saludo se usa por la mañana en mandarín?|早上好 (zǎoshang hǎo)|晚安 (wǎn ān)|再见 (zàijiàn)|谢谢 (xièxie)
+ZH|¿Qué color significa 绿色 (lǜsè)?|Verde|Rojo|Azul|Amarillo
+ZH|¿Qué color significa 白色 (báisè)?|Blanco|Negro|Verde|Morado
+ZH|¿Qué número representa 一 (yī)?|1|2|3|4
+ZH|¿Qué número representa 二 (èr)?|2|3|4|5
+ZH|¿Qué número representa 三 (sān)?|3|4|5|6
+ZH|¿Qué significa 牛 (niú)?|Vaca|Caballo|Gato|Perro
+ZH|¿Qué significa 鸟 (niǎo)?|Pájaro|Pez|Conejo|Oso
+ZH|¿Qué significa 鱼 (yú)?|Pez|Pájaro|Gato|Perro
+ZH|¿Qué significa 眼睛 (yǎnjing)?|Ojos|Manos|Pies|Orejas
+ZH|¿Qué significa 手 (shǒu)?|Mano|Cabeza|Pie|Boca
+ZH|¿Qué significa 书包 (shūbāo)?|Mochila|Libro|Cuaderno|Lápiz
+ZH|¿Qué significa 水果 (shuǐguǒ)?|Fruta|Verdura|Agua|Comida
+ZH|¿Qué significa 苹果 (píngguǒ)?|Manzana|Naranja|Plátano|Uva
+ZH|¿Qué significa 早 (zǎo)?|Temprano|Tarde|Grande|Pequeño
+ZH|¿Qué significa 再 (zài) en expresiones como 再见?|Otra vez|Nunca|Ayer|Mañana
 FIN_BANCO
 
 # Se quedan solo las líneas válidas (MATERIA|...) y se cuentan por materia

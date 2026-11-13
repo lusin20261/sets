@@ -13,6 +13,7 @@ import json
 import os
 import random
 import re
+import select
 import socket
 import subprocess
 import socketserver
@@ -26,6 +27,7 @@ from typing import Any
 PORT = int(os.environ.get("QUIZ_LAN_PORT", "50555"))
 COUNTDOWN_SECONDS = 120
 QUESTIONS_PER_GAME = 20
+QUESTION_TIME_LIMIT = 10
 MAX_PLAYERS = 60
 CATEGORY_NAMES = {
     "CG": "Cultura general",
@@ -288,6 +290,12 @@ class QuizHandler(socketserver.BaseRequestHandler):
 
             correct_count = 0
             for index, question in enumerate(self.server.room.questions, start=1):
+                # The client signals when it has finished showing the previous
+                # feedback and is ready to receive the next timed question.
+                ready_message = receive_json(reader)
+                if not ready_message or ready_message.get("type") != "ready_for_question":
+                    raise ConnectionError("El jugador se desconectó antes de la siguiente pregunta.")
+
                 options = [question["correct"], *question["wrong"]]
                 random.shuffle(options)
                 correct_letter = LETTERS[options.index(question["correct"])]
@@ -298,20 +306,32 @@ class QuizHandler(socketserver.BaseRequestHandler):
                     "category": CATEGORY_NAMES.get(question["category"], question["category"]),
                     "question": question["question"],
                     "options": options,
+                    "time_limit": QUESTION_TIME_LIMIT,
                 }):
                     raise ConnectionError("No se pudo enviar la pregunta.")
 
-                answer = receive_json(reader)
-                if not answer or answer.get("type") != "answer":
-                    raise ConnectionError("El jugador se desconectó.")
-                selected = str(answer.get("value", "")).lower().strip()
-                is_correct = selected == correct_letter
+                # The server owns the deadline, so a slow or modified client cannot
+                # extend the time available for a question.
+                deadline = time.monotonic() + QUESTION_TIME_LIMIT
+                remaining = max(0.0, deadline - time.monotonic())
+                readable, _, _ = select.select([self.request], [], [], remaining)
+                timed_out = not readable
+                if timed_out:
+                    selected = ""
+                else:
+                    answer = receive_json(reader)
+                    if not answer or answer.get("type") != "answer":
+                        raise ConnectionError("El jugador se desconectó.")
+                    selected = str(answer.get("value", "")).lower().strip()
+
+                is_correct = (not timed_out) and selected == correct_letter
                 if is_correct:
                     correct_count += 1
 
                 if not player.send({
                     "type": "feedback",
                     "correct": is_correct,
+                    "timed_out": timed_out,
                     "right_answer": question["correct"],
                     "score": correct_count,
                 }):
@@ -489,12 +509,140 @@ def ask_password(create: bool) -> str:
         return password
 
 
-def read_answer() -> str:
+def terminal_color(code: str) -> str:
+    """Return ANSI color only when output is an interactive colored terminal."""
+    if sys.stdout.isatty() and not os.environ.get("NO_COLOR"):
+        return f"\033[{code}m"
+    return ""
+
+
+RESET = terminal_color("0")
+BOLD = terminal_color("1")
+DIM = terminal_color("2")
+CYAN = terminal_color("96")
+BLUE = terminal_color("94")
+YELLOW = terminal_color("93")
+GREEN = terminal_color("92")
+MAGENTA = terminal_color("95")
+RED = terminal_color("91")
+WHITE = terminal_color("97")
+
+
+def clear_terminal() -> None:
+    """Clear the previous question so answered questions do not pile up."""
+    if sys.stdout.isatty():
+        sys.stdout.write("\033[2J\033[H")
+        sys.stdout.flush()
+
+
+def render_question(index: int, total: int, category: str, question: str,
+                    options: list[str], time_limit: int) -> None:
+    """Render a colorful single-question screen."""
+    clear_terminal()
+    category_colors = {
+        "Cultura general": CYAN,
+        "Matemática": YELLOW,
+        "Inglés": MAGENTA,
+        "Chino básico": GREEN,
+    }
+    cat_color = category_colors.get(category, CYAN)
+    progress = int((index - 1) * 24 / max(1, total))
+    bar = "█" * progress + "░" * (24 - progress)
+
+    print(f"{CYAN}{BOLD}╔══════════════════════════════════════════════════════════════╗{RESET}")
+    print(f"{CYAN}{BOLD}║                    QUIZ ESCOLAR · LAN                         ║{RESET}")
+    print(f"{CYAN}{BOLD}╚══════════════════════════════════════════════════════════════╝{RESET}")
+    print(f"\n  {WHITE}{BOLD}PREGUNTA {index:02d}/{total:02d}{RESET}   {DIM}{bar}{RESET}")
+    print(f"  {cat_color}{BOLD}◆ {category.upper()}{RESET}")
+    print(f"\n  {WHITE}{BOLD}{question}{RESET}\n")
+
+    option_colors = [CYAN, YELLOW, MAGENTA, GREEN]
+    for pos, option in enumerate(options[:4]):
+        letter = LETTERS[pos].upper()
+        color = option_colors[pos]
+        print(f"    {color}{BOLD}[ {letter} ]{RESET}  {WHITE}{option}{RESET}")
+
+    print(f"\n  {DIM}Responde con A, B, C o D y presiona ENTER.{RESET}")
+    print(f"  {DIM}Tienes {time_limit} segundos. ¡Tú puedes!{RESET}")
+    sys.stdout.flush()
+
+
+def read_answer_with_timer(seconds: int) -> str | None:
+    """Read a letter before the deadline; return None when time runs out."""
+    deadline = time.monotonic() + max(0.1, seconds - 0.2)
+    last_shown = None
+    prompt_shown = False
+
     while True:
-        value = input("Tu respuesta (a, b, c o d): ").strip().lower()
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            if sys.stdin.isatty():
+                try:
+                    import termios
+                    termios.tcflush(sys.stdin.fileno(), termios.TCIFLUSH)
+                except (ImportError, OSError, ValueError):
+                    pass
+            if sys.stdout.isatty():
+                sys.stdout.write("\r\033[2K")
+                sys.stdout.flush()
+            return None
+
+        seconds_left = max(1, int(remaining + 0.999))
+        if seconds_left != last_shown:
+            if sys.stdout.isatty():
+                filled = max(0, min(10, seconds_left))
+                meter = "█" * filled + "░" * (10 - filled)
+                color = RED if seconds_left <= 3 else YELLOW if seconds_left <= 5 else GREEN
+                sys.stdout.write(
+                    f"\r\033[2K  {color}{BOLD}TIEMPO: [{meter}] {seconds_left:02d}s{RESET}"
+                    f"   {WHITE}Respuesta (A-D): {RESET}"
+                )
+                sys.stdout.flush()
+            elif not prompt_shown:
+                print("Respuesta (a, b, c o d): ", end="", flush=True)
+                prompt_shown = True
+            last_shown = seconds_left
+
+        wait_for = min(0.2, remaining)
+        try:
+            readable, _, _ = select.select([sys.stdin], [], [], wait_for)
+        except (OSError, ValueError):
+            return None
+        if not readable:
+            continue
+
+        line = sys.stdin.readline()
+        if line == "":
+            return ""
+        value = line.strip().lower()
         if value in LETTERS:
+            if sys.stdout.isatty():
+                sys.stdout.write("\r\033[2K")
+                sys.stdout.flush()
             return value
-        print("Escribe únicamente a, b, c o d.")
+
+        if sys.stdout.isatty():
+            sys.stdout.write("\r\033[2K")
+            sys.stdout.flush()
+        print(f"  {YELLOW}Escribe únicamente A, B, C o D.{RESET}")
+        last_shown = None
+        prompt_shown = False
+
+
+def render_feedback(feedback: dict[str, Any]) -> None:
+    """Show a brief result; the next question clears this screen."""
+    print()
+    if feedback.get("timed_out"):
+        print(f"  {RED}{BOLD}⏰ ¡Se acabó el tiempo!{RESET}")
+        print(f"  {WHITE}La respuesta era: {YELLOW}{BOLD}{feedback.get('right_answer', '')}{RESET}")
+    elif feedback.get("correct"):
+        print(f"  {GREEN}{BOLD}✓ ¡Correcto! ¡Buen trabajo!{RESET}")
+    else:
+        print(f"  {RED}{BOLD}✗ ¡Buen intento!{RESET}")
+        print(f"  {WHITE}La respuesta correcta era: {YELLOW}{BOLD}{feedback.get('right_answer', '')}{RESET}")
+    print(f"\n  {CYAN}{BOLD}Puntaje: {feedback.get('score', 0)}/{QUESTIONS_PER_GAME}{RESET}")
+    sys.stdout.flush()
+    time.sleep(1.15)
 
 
 def render_lobby(remaining: int, players: list[str]) -> None:
@@ -560,11 +708,15 @@ def play_as_client(host: str, password: str, name: str) -> None:
             elif kind == "error":
                 print(f"\n{message.get('message', 'Error de sala.')}")
                 return
-        if sys.stdout.isatty():
-            sys.stdout.write("\033[2J\033[H")
-        print("\n¡Comienza la partida! Son 20 preguntas. Cada acierto vale 1 punto.\n")
+        clear_terminal()
+        print(f"{GREEN}{BOLD}¡Comienza la partida!{RESET}")
+        print(f"{CYAN}Son 20 preguntas. Cada acierto vale 1 punto.{RESET}")
+        print(f"{YELLOW}Tendrás 10 segundos para responder cada pregunta.{RESET}")
 
         for _ in range(QUESTIONS_PER_GAME):
+            # Start the server-side deadline only after feedback has been shown
+            # and this client is ready for the next question.
+            send_json(sock, threading.Lock(), {"type": "ready_for_question"})
             message = receive_json(reader)
             if not message or message.get("type") != "question":
                 print("Se perdió la conexión mientras se recibía una pregunta.")
@@ -572,25 +724,25 @@ def play_as_client(host: str, password: str, name: str) -> None:
 
             index = int(message["index"])
             total = int(message["total"])
-            print("\n" + "═" * 66)
-            print(f"PREGUNTA {index}/{total}   |   {message.get('category', '')}")
-            print("─" * 66)
-            print(message.get("question", ""))
-            print()
+            time_limit = int(message.get("time_limit", QUESTION_TIME_LIMIT))
             options = message.get("options", [])
-            for pos, option in enumerate(options[:4]):
-                print(f"  {LETTERS[pos]}) {option}")
+            render_question(
+                index, total, str(message.get("category", "")),
+                str(message.get("question", "")), options, time_limit,
+            )
 
-            selected = read_answer()
-            send_json(sock, threading.Lock(), {"type": "answer", "value": selected})
+            selected = read_answer_with_timer(time_limit)
+            timed_out_locally = selected is None
+            send_json(sock, threading.Lock(), {
+                "type": "answer",
+                "value": selected or "",
+                "timed_out": timed_out_locally,
+            })
             feedback = receive_json(reader)
             if not feedback or feedback.get("type") != "feedback":
                 print("No se pudo recibir la corrección de la respuesta.")
                 return
-            if feedback.get("correct"):
-                print(f"\n  ✓ ¡Correcto! Puntaje: {feedback.get('score', 0)}/20")
-            else:
-                print(f"\n  ✗ Respuesta correcta: {feedback.get('right_answer', '')}. Puntaje: {feedback.get('score', 0)}/20")
+            render_feedback(feedback)
 
         waiting = receive_json(reader)
         if waiting and waiting.get("type") == "waiting_results":
@@ -603,7 +755,7 @@ def play_as_client(host: str, password: str, name: str) -> None:
         show_results(final.get("players", []), name)
 
     except (OSError, TimeoutError) as exc:
-        print(f"\nNo se pudo conectar con {host}:{PORT}. Verifica la IP, la red y el puerto.\nDetalle: {exc}")
+        print(f"\nNo se pudo conectar con la sala en {host}:{PORT}. Verifica la red y el puerto.\nDetalle: {exc}")
     finally:
         try:
             if reader is not None:
@@ -614,9 +766,10 @@ def play_as_client(host: str, password: str, name: str) -> None:
 
 
 def show_results(players: list[dict[str, Any]], own_name: str) -> None:
-    print("\n" + "═" * 66)
-    print("                 RESULTADOS FINALES")
-    print("═" * 66)
+    clear_terminal()
+    print(f"{CYAN}{BOLD}╔══════════════════════════════════════════════════════════════╗{RESET}")
+    print(f"{CYAN}{BOLD}║                      RESULTADOS FINALES                      ║{RESET}")
+    print(f"{CYAN}{BOLD}╚══════════════════════════════════════════════════════════════╝{RESET}")
     if not players:
         print("No hay resultados para mostrar.")
         return
