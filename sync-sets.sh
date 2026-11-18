@@ -60,6 +60,7 @@ echo "-----------------------------------"
 declare -a SYSTEM_FILES=(
     "whitelist.json|/etc/brave/policies/managed/whitelist.json"
     "default-search.json|/etc/brave/policies/managed/default-search.json"
+    "gpu.json|/etc/brave/policies/managed/gpu.json"
     "10-disable-dpms.conf|/etc/X11/xorg.conf.d/10-disable-dpms.conf"
     "gpu-flags.json|/etc/brave/policies/managed/gpu-flags.json"
     "gpu-swiftshader.json|/etc/brave/policies/managed/gpu-swiftshader.json"
