@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=MBlock
+Comment=Abre Mblock Online
+Exec=brave-browser --app=https://ide.mblock.cc/
+Icon=web-browser
+Terminal=false
+Categories=Network;
